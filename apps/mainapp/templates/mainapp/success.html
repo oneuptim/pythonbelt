@@ -1,0 +1,35 @@
+{% load staticfiles %}
+{% load fontawesome %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Poking Dojo | Fun way to annoy your cohortmates!</title>
+    <link rel="stylesheet" href="{% static 'mainapp/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'mainapp/css/font-awesome.min.css' %}">
+    <script src="https://use.typekit.net/iii7xtz.js"></script>
+    <script>try{Typekit.load({ async: true });}catch(e){}</script>
+    <script src="https://use.typekit.net/iii7xtz.js"></script>
+    <script>try{Typekit.load({ async: true });}catch(e){}</script>
+    {% fontawesome_stylesheet %}
+  </head>
+  <body>
+    <div id="wrapper">
+      <div class="logo">Poking Dojo</div>
+      <div class="menu">
+        <h3>Welcome, {{ loggedInUser.first_name }} | <a href="/logout"> {% fontawesome_icon 'lock' color='#e80c79' %} Logout</a></h3>
+      </div><br>
+        <h2>People you may want to poke</h2>
+        <table>
+          <thead>
+            <tr><td>Name</td><td>Alias</td><td>Email Address</td><td>Poke History</td><td>Action</td></tr>
+          </thead>
+          {% for user in allUsers %}
+          <tr>
+            <td>{{ user.first_name }} {{ user.last_name }}</td><td>{{ user.first_name }}</td><td>{{ user.email }}</td><td>Poked {{ pokeCount }} times</td><td><a href="poke/{{ user.id }}"><button type="submit" class="button" name="poke-btn">Poke!</button></a></td>
+          </tr>
+          {% endfor %}
+        </table>
+    </div>
+  </body>
+</html>
