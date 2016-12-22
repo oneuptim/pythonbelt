@@ -17,8 +17,33 @@
     <div id="wrapper">
       <div class="logo">Poking Dojo</div>
       <div class="menu">
-        <h3>Welcome, {{ loggedInUser.first_name }} | <a href="/logout"> {% fontawesome_icon 'lock' color='#e80c79' %} Logout</a></h3>
+        <h3>Welcome, {{loggedInUser.first_name }} | <a href="/logout"> {% fontawesome_icon 'lock' color='#e80c79' %} Logout</a></h3>
+
       </div><br>
+      <i>
+      {% for key, value in peoplewhopoked %}
+        {{ key }} poked you {{value}}
+          {% if value < 2 %}
+            time!
+            {% else %}
+          times!
+          {% endif %}
+        •
+      {% endfor %}
+      </i>
+
+      <!-- {% for i in pokelist %}
+      {% for poker in pokerCount %}
+        <p>{{ i.poker.first_name }} poked you {{ poker.poke_count }} times!</p>
+          {% endfor %}
+      {% endfor %}
+      <hr>
+      {% for poker in pokerCount %}
+        <p>ID: {{ poker.poker }} poked you {{ poker.poke_count }} times!<p>
+      {% endfor %} -->
+
+
+
         <h2>People you may want to poke</h2>
         <table>
           <thead>
@@ -26,7 +51,15 @@
           </thead>
           {% for user in allUsers %}
           <tr>
-            <td>{{ user.first_name }} {{ user.last_name }}</td><td>{{ user.first_name }}</td><td>{{ user.email }}</td><td>Poked {{ pokeCount }} times</td><td><a href="poke/{{ user.id }}"><button type="submit" class="button" name="poke-btn">Poke!</button></a></td>
+            <td>{{ user.first_name }} {{ user.last_name }}</td><td>{{ user.first_name }}</td><td>{{ user.email }}</td><td>Poked
+              {% for poke in allpokes %}
+              {% if poke.poked == user.id %}
+                {{ poke.poke_count }}
+              {% endif %}
+              {% endfor %}
+                  times
+
+              </td><td><a href="poke/{{ user.id }}"><button type="submit" class="button" name="poke-btn">Poke!</button></a></td>
           </tr>
           {% endfor %}
         </table>

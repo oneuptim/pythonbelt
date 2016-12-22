@@ -66,7 +66,7 @@ class UserManager(models.Manager):
 				print "password didnt match"
 				return (False, errors)
 		else:
-			print "no email found"
+			print "No email found"
 			errors.append("No email found in our system, please register dude!!!")
 			return (False, errors)
 
@@ -74,19 +74,12 @@ class PokeManager(models.Manager):
     def poke(self, session, id):
         poker = User.objects.get(id=session)
         poked = User.objects.get(id=id)
-        newPoke = Poker.objects.create(user=poked, poker=poker)
-		# pokes = Poker.objects.filter(user_id=id).values()
+        newPoke = Poke.objects.create(poked=poked, poker=poker)
         return(newPoke)
-		# pokes = Poker.objects.filter(user_id=id).values()
-		# print newPoke, "$"*300
-		# total = 0
-		# for poke in pokes:
-		# 	total += poke['count']
 
-class Poker(models.Model):
-    user = models.ForeignKey('User', models.DO_NOTHING, related_name="useruser")
-    poker = models.ForeignKey('User', models.DO_NOTHING, related_name ="userpoker")
-    # count = models.IntegerField(default=1)
+class Poke(models.Model): # Change to Poke
+    poked = models.ForeignKey('User', models.DO_NOTHING, related_name="pokeduser") # poked
+    poker = models.ForeignKey('User', models.DO_NOTHING, related_name ="pokeruser")
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
     objects = PokeManager()

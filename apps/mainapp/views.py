@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
-from .models import User, Poker
+from .models import User, Poke
+# from django.db import models
+from django.db.models import Count
 
 def index(request):
     return render(request, 'mainapp/index.html')
@@ -46,19 +48,40 @@ def success(request):
         session = request.session['id']
         loggedInUser = User.objects.get(id=session)
         res = User.objects.all().exclude(id=session).order_by('-created_at')
-        pokes = Poker.objects.filter(user_id=5)
-        pokeCount = pokes.count()
-        print pokeCount, "%"*300
+        allpokes = Poke.objects.all().values('poked').annotate(poke_count=Count('poked'))
+        pokerCount = Poke.objects.filter(poked_id=session).values('poker').annotate(poke_count=Count('poker'))
+
+        peoplewhopoked = {}
+        for poking in pokerCount:
+            todictionary = User.objects.get(id=poking['poker']).first_name
+            peoplewhopoked[todictionary] = poking['poke_count']
+
+        print "our dictionary", peoplewhopoked
+
+
+
+
+        pokelist = Poke.objects.filter(poked_id=session).annotate(poker_name=Count('poker')).order_by('created_at')
+
+
+
+
+
+
+        print pokerCount, "^"*100
         data = {
             'allUsers': res,
             'loggedInUser': loggedInUser,
-            'pokeCount': pokeCount
+            'allpokes': allpokes,
+            'pokerCount': pokerCount,
+            'pokelist': pokelist,
+            'peoplewhopoked': sorted(peoplewhopoked.items())
             }
         return render(request, 'mainapp/success.html', data)
 
 def poke(request, id):
     session = request.session['id']
-    Poker.objects.poke(session, id)
+    Poke.objects.poke(session, id)
     return redirect('/success')
 
 def logout(request):
